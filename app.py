@@ -3,6 +3,7 @@ import pandas as pd
 import string
 import nltk
 import re
+import io
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import pickle
