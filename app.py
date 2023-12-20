@@ -154,10 +154,7 @@ def main():
 
     # Mendapatkan file CSV dari user
     uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
-
     if uploaded_file is not None:
-        # Membaca file CSV menjadi DataFrame
-        uploaded_file.seek(0)
         csv_string = io.StringIO(uploaded_file.getvalue().decode("utf-8"))
         df = pd.read_csv(csv_string, encoding='utf-8', delimiter=';')
 
