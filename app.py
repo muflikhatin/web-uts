@@ -8,7 +8,6 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import pickle
 import matplotlib.pyplot as plt
 import requests
-import tensorflow.keras as keras
 from nltk.tokenize import word_tokenize
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 from nltk.stem import PorterStemmer
@@ -148,29 +147,23 @@ def label_data(text, model, tokenizer, max_sequence_length):
     return int(prediction[0])
 
 
-
 def main():
     st.title(
         "Aplikasi Streamlit untuk Input CSV dengan Preprocessing dan Pelabelan Otomatis")
 
-    uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])  # Definisikan uploaded_file di sini
+    # Mendapatkan file CSV dari user
+    uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
 
     if uploaded_file is not None:
-        st.write("File info:")
-        st.write(uploaded_file)
-        
-        # Baca data dari file yang diunggah
-        content = uploaded_file.getvalue().decode('utf-8')  # Ambil konten dari file yang diunggah
-
-        # Baca data CSV menggunakan io.StringIO
-        data = io.StringIO(content)
-        df = pd.read_csv(data, encoding='latin1', delimiter=';')
-        df_preview = df.head(5)  # Ambil 5 baris pertama dari DataFrame
+        # Membaca file CSV menjadi DataFrame
+        uploaded_file.seek(0)
+        content = uploaded_file.getvalue().decode("utf-8")
+        print(content)
+        df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
 
         # Menampilkan data DataFrame
         st.write("Data yang diimpor:")
-        st.write(df_preview)
-
+        st.write(df)
 
         # Menghapus duplikat berdasarkan kolom 'tweet text'
         df_no_duplicates = df.drop_duplicates(subset='tweet text').copy()
@@ -201,7 +194,7 @@ def main():
 
         # Menampilkan hasil
         st.write("Data Awal dengan Label yang Sudah Diprediksi:")
-        st.write(df_result[['full_text', 'predicted_label']])
+        st.write(df_result[['tweet text', 'predicted_label']])
 
         # Visualisasi pie chart
         st.write("Visualisasi Hasil Prediksi Label:")
@@ -227,5 +220,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
