@@ -186,7 +186,8 @@ def main():
             X_padded = pad_sequences(X_sequences, maxlen=max_sequence_length)
         
             # Pelabelan otomatis
-            df_preprocessed['predicted_label'] = df_preprocessed['cleaned'].apply(lambda x: label_data(x, loaded_model, tokenizer, max_sequence_length))
+            df_preprocessed['predicted_label'] = df_preprocessed['cleaned'].apply(
+                lambda x: label_data(x, loaded_model, tokenizer, max_sequence_length))
         
             # Menyatukan data awal dan kolom predicted_label
             df_result = pd.concat([df, df_preprocessed['predicted_label']], axis=1)
