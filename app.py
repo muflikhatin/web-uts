@@ -150,12 +150,17 @@ def label_data(text, model, tokenizer, max_sequence_length):
 
 def main():
     st.title(
-       "Aplikasi Streamlit untuk Input CSV dengan Preprocessing dan Pelabelan Otomatis")
-    
+        "Aplikasi Streamlit untuk Input CSV dengan Preprocessing dan Pelabelan Otomatis")
+
     # Mendapatkan file CSV dari user
-    # Read the labeled data file directly
-    file_path = 'labeled_data.csv'  # Path to your labeled data file
-    df = pd.read_csv(file_path)
+    uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
+
+    if uploaded_file is not None:
+        # Membaca file CSV menjadi DataFrame
+        uploaded_file.seek(0)
+        content = uploaded_file.getvalue().decode("utf-8")
+        print(content)
+        df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
 
     # Menampilkan data DataFrame
     st.write("Data yang diimpor:")
