@@ -91,7 +91,7 @@ def correctSlangWords(text, slang_mapping):
 
 # Function to preprocess data
 def preprocess_data(df, slang_mapping):
-    df['removed_handles'] = df['full_text'].apply(
+    df['removed_handles'] = df['tweet text'].apply(
         lambda x: re.sub(r'@[\w]*', '', x))
     df['removed_hashtags'] = df['removed_handles'].apply(
         lambda x: re.sub(r'#\w+', '', x))
@@ -167,7 +167,7 @@ def main():
         st.write(df)
 
         # Menghapus duplikat berdasarkan kolom 'full_text'
-        df_no_duplicates = df.drop_duplicates(subset='full_text').copy()
+        df_no_duplicates = df.drop_duplicates(subset='tweet text').copy()
 
         # Preprocessing data
         st.write("Data setelah preprocessing:")
@@ -195,7 +195,7 @@ def main():
 
         # Menampilkan hasil
         st.write("Data Awal dengan Label yang Sudah Diprediksi:")
-        st.write(df_result[['full_text', 'predicted_label']])
+        st.write(df_result[['tweet text', 'predicted_label']])
 
         # Visualisasi pie chart
         st.write("Visualisasi Hasil Prediksi Label:")
