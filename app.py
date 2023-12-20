@@ -171,7 +171,7 @@ def main():
             # Preprocessing data
             st.write("Data setelah preprocessing:")
             df_preprocessed = preprocess_data(df_no_duplicates, slang_mapping)
-            st.write(df_preprocessed))
+            st.write(df_preprocessed)
 
     # Load the Keras model
     model_path = 'lstm_model.h5'  # Update with your model path
