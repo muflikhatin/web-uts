@@ -158,9 +158,8 @@ def main():
     if uploaded_file is not None:
         # Membaca file CSV menjadi DataFrame
         uploaded_file.seek(0)
-        content = uploaded_file.getvalue().decode("utf-8")
-        print(content)
-        df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
+        csv_string = io.StringIO(uploaded_file.getvalue().decode("utf-8"))
+        df = pd.read_csv(csv_string, encoding='utf-8', delimiter=';')
 
         # Menampilkan data DataFrame
         st.write("Data yang diimpor:")
