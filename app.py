@@ -157,21 +157,21 @@ def main():
 
     if uploaded_file is not None:
         # Membaca file CSV menjadi DataFrame
-        uploaded_file.seek(0)
-        content = uploaded_file.getvalue().decode("utf-8")
-        print(content)
-        df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
+        try:
+            # Membaca file CSV menjadi DataFrame
+            df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
+            
+            # Menampilkan data DataFrame
+            st.write("Data yang diimpor:")
+            st.write(df)
+            
+            # Menghapus duplikat berdasarkan kolom 'tweet text'
+            df_no_duplicates = df.drop_duplicates(subset='tweet text').copy()
 
-    # Menampilkan data DataFrame
-    st.write("Data yang diimpor:")
-    st.write(df)
-    # Menghapus duplikat berdasarkan kolom 'full_text'
-    df_no_duplicates = df.drop_duplicates(subset='tweet text').copy()
-
-    # Preprocessing data
-    st.write("Data setelah preprocessing:")
-    df_preprocessed = preprocess_data(df_no_duplicates, slang_mapping)
-    st.write(df_preprocessed)
+            # Preprocessing data
+            st.write("Data setelah preprocessing:")
+            df_preprocessed = preprocess_data(df_no_duplicates, slang_mapping)
+            st.write(df_preprocessed))
 
     # Load the Keras model
     model_path = 'lstm_model.h5'  # Update with your model path
