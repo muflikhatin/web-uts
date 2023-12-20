@@ -148,6 +148,7 @@ def label_data(text, model, tokenizer, max_sequence_length):
     return int(prediction[0])
 
 
+
 def main():
     st.title(
         "Aplikasi Streamlit untuk Input CSV dengan Preprocessing dan Pelabelan Otomatis")
@@ -156,66 +157,65 @@ def main():
     uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
 
     if uploaded_file is not None:
-        # Membaca file CSV menjadi DataFrame
-        try:
-            # Membaca file CSV menjadi DataFrame
-            df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
-            
-            # Menampilkan data DataFrame
-            st.write("Data yang diimpor:")
-            st.write(df)
-            
-            # Menghapus duplikat berdasarkan kolom 'tweet text'
-            df_no_duplicates = df.drop_duplicates(subset='tweet text').copy()
+        df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
 
-            # Preprocessing data
-            st.write("Data setelah preprocessing:")
-            df_preprocessed = preprocess_data(df_no_duplicates, slang_mapping)
-            st.write(df_preprocessed)
+        # Menampilkan data DataFrame
+        st.write("Data yang diimpor:")
+        st.write(df)
 
-            # Load the Keras model
-            model_path = 'lstm_model.h5'  # Update with your model path
-            loaded_model = load_keras_model(model_path)
-        
-            if loaded_model is None:
-                return
-        
-            # Tokenize and pad sequences
-            X_sequences = tokenizer.texts_to_sequences(df_preprocessed['cleaned'])
-            max_sequence_length = 32  # Update with the expected sequence length of your model
-            X_padded = pad_sequences(X_sequences, maxlen=max_sequence_length)
-        
-            # Pelabelan otomatis
-            df_preprocessed['predicted_label'] = df_preprocessed['cleaned'].apply(
-                lambda x: label_data(x, loaded_model, tokenizer, max_sequence_length))
-        
-            # Menyatukan data awal dan kolom predicted_label
-            df_result = pd.concat([df, df_preprocessed['predicted_label']], axis=1)
-        
-            # Menampilkan hasil
-            st.write("Data Awal dengan Label yang Sudah Diprediksi:")
-            st.write(df_result[['tweet text', 'predicted_label']])
-        
-            # Visualisasi pie chart
-            st.write("Visualisasi Hasil Prediksi Label:")
-            labels_count = df_result['predicted_label'].value_counts()
-        
-            fig, ax = plt.subplots()
-            ax.pie(labels_count, labels=labels_count.index, autopct='%1.1f%%', startangle=90, wedgeprops=dict(width=0.3, edgecolor='w'))
-            # Equal aspect ratio ensures that pie is drawn as a circle.
-            ax.axis('equal')
-            ax.set_facecolor('none')  # Set background color to transparent
-            st.pyplot(fig)
-        
-            # Save labeled data to CSV
-            df_preprocessed.to_csv('labeled_data.csv', index=False)
-        
-            st.write("X_train_sequences: 4000")
-            st.write("X_test_sequences: 1000")
-            st.write("max_sequence_length: 32")
-            st.write("X_train_padded: 32")
-            st.write("X_test_padded: 32")
-            
+        # Menghapus duplikat berdasarkan kolom 'tweet text'
+        df_no_duplicates = df.drop_duplicates(subset='tweet text').copy()
+
+        # Preprocessing data
+        st.write("Data setelah preprocessing:")
+        df_preprocessed = preprocess_data(df_no_duplicates, slang_mapping)
+        st.write(df_preprocessed)
+
+        # Load the Keras model
+        model_path = 'lstm_model.h5'  # Update with your model path
+        loaded_model = load_keras_model(model_path)
+
+        if loaded_model is None:
+            return
+
+        # Tokenize and pad sequences
+        X_sequences = tokenizer.texts_to_sequences(df_preprocessed['cleaned'])
+        max_sequence_length = 32  # Update with the expected sequence length of your model
+        X_padded = pad_sequences(X_sequences, maxlen=max_sequence_length)
+
+        # Pelabelan otomatis
+        df_preprocessed['predicted_label'] = df_preprocessed['cleaned'].apply(
+            lambda x: label_data(x, loaded_model, tokenizer, max_sequence_length))
+
+        # Menyatukan data awal dan kolom predicted_label
+        df_result = pd.concat([df, df_preprocessed['predicted_label']], axis=1)
+
+        # Menampilkan hasil
+        st.write("Data Awal dengan Label yang Sudah Diprediksi:")
+        st.write(df_result[['full_text', 'predicted_label']])
+
+        # Visualisasi pie chart
+        st.write("Visualisasi Hasil Prediksi Label:")
+        labels_count = df_result['predicted_label'].value_counts()
+
+        fig, ax = plt.subplots()
+        ax.pie(labels_count, labels=labels_count.index, autopct='%1.1f%%',
+               startangle=90, wedgeprops=dict(width=0.3, edgecolor='w'))
+        # Equal aspect ratio ensures that pie is drawn as a circle.
+        ax.axis('equal')
+        ax.set_facecolor('none')  # Set background color to transparent
+        st.pyplot(fig)
+
+        # Save labeled data to CSV
+        df_preprocessed.to_csv('labeled_data.csv', index=False)
+
+        st.write("X_train_sequences: 4000")
+        st.write("X_test_sequences: 1000")
+        st.write("max_sequence_length: 32")
+        st.write("X_train_padded: 32")
+        st.write("X_test_padded: 32")
+
+
 if __name__ == "__main__":
     main()
 
