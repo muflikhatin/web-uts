@@ -215,7 +215,5 @@ def main():
             st.write("max_sequence_length: 32")
             st.write("X_train_padded: 32")
             st.write("X_test_padded: 32")
-
-
 if __name__ == "__main__":
     main()
