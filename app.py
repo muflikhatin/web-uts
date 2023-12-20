@@ -154,11 +154,14 @@ def main():
         "Aplikasi Streamlit untuk Input CSV dengan Preprocessing dan Pelabelan Otomatis")
 
     # Mendapatkan file CSV dari user
-    uploaded_file = st.file_uploader("Pilih file CSV", type=["csv"])
+    st.write("File info:")
+    st.write(uploaded_file)
 
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';')
-
+        df_preview = pd.read_csv(uploaded_file, encoding='latin1', delimiter=';', nrows=5)
+        st.write("Preview of the data:")
+        st.write(df_preview)
         # Menampilkan data DataFrame
         st.write("Data yang diimpor:")
         st.write(df)
